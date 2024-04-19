@@ -21,7 +21,7 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: '*'
+        - pattern: master
           include: true
     publishing:
       email:
