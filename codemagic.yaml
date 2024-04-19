@@ -10,6 +10,8 @@ workflows:
         script: flutter doctor
       - name: Get Flutter Packages
         script: flutter pub get
+      - name: Test Command
+        script: flutter pub outdated
       - name: Flutter Build APK
         script: flutter build apk --release
     artifacts:
