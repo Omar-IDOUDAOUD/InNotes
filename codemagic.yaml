@@ -6,27 +6,19 @@ workflows:
       java: 17
       flutter: stable
     scripts:
-      - name: Set up local.properties
-        script: | 
-          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
-      - name: Get Flutter packages
-        script: | 
-          flutter packages pub get
-      - name: Fetch Outdated Packages
-        script: | 
-          flutter pub outdated
-      - name: Flutter analyze
-        script: | 
-          flutter analyze
-      - name: Build APK with Flutter
-        script: | 
-          flutter build apk --release \
-            --build-name=1.0.$BUILD_NUMBER \
-            --build-number=$BUILD_NUMBER
+      - name: Checking Flutter
+        script: /
+          flutter --version
+          flutter doctor
+      - name: Get Flutter Packages
+        script: flutter pub get
+      - name: Flutter Build APK
+        script: flutter build apk --release
     artifacts:
-      - build/**/outputs/**/*.apk
+      - build/**/outputs/apk/**/*.apk
+      - subfolder_name/build/**/outputs/apk/**/*.apk
+      - build/**/outputs/**/*.aab
       - build/**/outputs/**/mapping.txt
-      - flutter_drive.log
     triggering: 
       events:
         - push
