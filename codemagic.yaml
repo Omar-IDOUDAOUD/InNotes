@@ -12,6 +12,9 @@ workflows:
       - name: Get Flutter packages
         script: | 
           flutter packages pub get
+      - name: Fetch Outdated Packages
+        script: | 
+          flutter pub outdated
       - name: Flutter analyze
         script: | 
           flutter analyze
