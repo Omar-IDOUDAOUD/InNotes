@@ -24,7 +24,7 @@ workflows:
       - build/**/outputs/**/*.apk
       - build/**/outputs/**/mapping.txt
       - flutter_drive.log
-    triggers: 
+    triggering: 
       events:
         - push
       branch_patterns:
