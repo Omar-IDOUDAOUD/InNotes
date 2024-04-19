@@ -21,4 +21,3 @@ class InNotes extends StatelessWidget {
     );
   }
 }
-//
