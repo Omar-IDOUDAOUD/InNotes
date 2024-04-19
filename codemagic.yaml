@@ -6,8 +6,8 @@ workflows:
       java: 17
       flutter: stable
     scripts:
-      - name: Flutter Doctor
-        script: flutter doctor
+      # - name: Flutter Doctor
+      #   script: flutter doctor
       - name: Get Flutter Packages
         script: flutter pub get
       - name: Flutter Build APK
