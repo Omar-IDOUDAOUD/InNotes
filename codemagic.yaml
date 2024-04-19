@@ -6,10 +6,8 @@ workflows:
       java: 17
       flutter: stable
     scripts:
-      - name: Checking Flutter
-        script: /
-          flutter --version
-          flutter doctor
+      - name: Flutter Doctor
+        script: flutter doctor
       - name: Get Flutter Packages
         script: flutter pub get
       - name: Flutter Build APK
