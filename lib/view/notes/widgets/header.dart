@@ -30,7 +30,6 @@ class _HeaderState extends State<Header> {
       toolbarHeight: 0,
       floating: true,
       elevation: 0,
-      title: Icon(FluentIcons.access_time_20_filled),
       forceMaterialTransparency: true,
       bottom: PreferredSize(
         preferredSize: const Size(double.infinity, 70),
@@ -50,18 +49,15 @@ class _HeaderState extends State<Header> {
                         CircleAvatar(
                           backgroundColor: Theme.of(context).cardColor,
                           radius: 25,
-                          child: const Icon(
+                          child: Icon(
                             FluentIcons.person_24_regular,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
                         const SizedBox(width: 15),
-                        const Text(
+                        Text(
                           'Hi, Omar',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            color: Colors.blueGrey,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ],
                     ),
@@ -92,19 +88,15 @@ class _HeaderState extends State<Header> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            SizedBox(width: 12.5),
-                            Icon(
-                              FluentIcons.search_24_regular,
-                            ),
-                            SizedBox(
-                              width: 13,
-                            ),
+                            const SizedBox(width: 12.5),
+                            const Icon(FluentIcons.search_24_regular),
+                            const SizedBox(width: 13),
                             if (widget.searchState) ...[
                               Expanded(
                                 child: TextField(
                                   focusNode: _searchFocusNode,
                                   style: Theme.of(context).textTheme.bodySmall,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: 'My Note',
                                     contentPadding: EdgeInsets.only(right: 25),
                                     border: InputBorder.none,
@@ -113,9 +105,6 @@ class _HeaderState extends State<Header> {
                                   ),
                                 ),
                               ),
-                              // SizedBox(
-                              //   width: 15,
-                              // ),
                             ],
                           ],
                         ),

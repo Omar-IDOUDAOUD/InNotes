@@ -1,38 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:innotes/constants/colors.dart';
 
 abstract class ThemeConsts {
   static ThemeData buildLightThemeData() {
-    final primaryColor = Colors.blueGrey.shade800;
+    const primaryColor = Colors.blueGrey;
+    final hintColor = primaryColor.shade200;
+    const backroundColor = Colors.white;
+    final ColorScheme colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Brightness.light,
+      primary: primaryColor,
+      background: backroundColor,
+    );
     return ThemeData.light(useMaterial3: true).copyWith(
-        textTheme: buildTextTheme(ThemeMode.light),
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.blueGrey, background: Colors.white),
-        scaffoldBackgroundColor: Colors.white,
-        cardColor: Colors.blueGrey.shade50,
-        primaryColor: primaryColor,
-        hintColor: Colors.blueGrey.shade200,
-        bottomSheetTheme: builBottomSheetThemeData(ThemeMode.light),
-        inputDecorationTheme: buildInputDecorationThemeData(),
-        iconTheme: IconThemeData(color: primaryColor),
-        appBarTheme: buildAppBarTheme(),
-        textButtonTheme: TextButtonThemeData(
-            style: ButtonStyle(
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10))))),
-        floatingActionButtonTheme: buildfloatingActionButtonTheme());
-  }
-
-  static AppBarTheme buildAppBarTheme() {
-    return AppBarTheme(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
+      colorScheme: colorScheme,
+      primaryColor: primaryColor,
+      hintColor: hintColor,
+      cardColor: primaryColor.shade50,
+      adaptations: [const Adaptation<NotesCardColorsLight>()],
+      textTheme: buildTextTheme(primaryColor),
+      scaffoldBackgroundColor: backroundColor,
+      dialogTheme: const DialogTheme(
+          surfaceTintColor: backroundColor, backgroundColor: backroundColor),
+      bottomSheetTheme: builBottomSheetThemeData(backroundColor),
+      inputDecorationTheme:
+          buildInputDecorationThemeData(primaryColor, hintColor),
+      iconTheme: const IconThemeData(color: primaryColor),
+      textButtonTheme: builTextButtonTheme(),
+      floatingActionButtonTheme: buildfloatingActionButtonTheme(primaryColor),
     );
   }
 
-  static buildInputDecorationThemeData() {
-    final textStyle = buildTextTheme(ThemeMode.light).bodySmall;
+  static ThemeData buildDarkThemeData() {
+    const primaryColor = Colors.white;
+    final hintColor = Colors.blueGrey.shade200;
+    final backroundColor = Colors.blueGrey.shade800;
+    final ColorScheme colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Brightness.dark,
+      primary: primaryColor,
+      background: backroundColor,
+    );
+    return ThemeData.light(useMaterial3: true).copyWith(
+      colorScheme: colorScheme,
+      primaryColor: primaryColor,
+      hintColor: hintColor,
+      cardColor: Colors.blueGrey.shade600,
+      adaptations: [const Adaptation<NotesCardColorsLight>()],
+      textTheme: buildTextTheme(primaryColor),
+      scaffoldBackgroundColor: backroundColor,
+      dialogTheme: DialogTheme(
+          surfaceTintColor: backroundColor, backgroundColor: backroundColor),
+      bottomSheetTheme: builBottomSheetThemeData(backroundColor),
+      inputDecorationTheme:
+          buildInputDecorationThemeData(primaryColor, hintColor),
+      iconTheme: const IconThemeData(color: primaryColor),
+      textButtonTheme: builTextButtonTheme(),
+      floatingActionButtonTheme: buildfloatingActionButtonTheme(primaryColor),
+    );
+  }
+
+  static InputDecorationTheme buildInputDecorationThemeData(
+      Color primaryColor, Color hintColor) {
+    final textStyle = buildTextTheme(primaryColor).bodySmall;
     return InputDecorationTheme(
-      fillColor: Colors.blueGrey.shade100.withOpacity(.5),
+      fillColor: primaryColor.withOpacity(.2),
       filled: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       border: OutlineInputBorder(
@@ -52,22 +84,16 @@ abstract class ThemeConsts {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(width: 2, color: Colors.blueGrey.shade500),
+        borderSide: BorderSide(width: 2, color: primaryColor),
       ),
-      hintStyle: textStyle.copyWith(
-        height: 1,
-        color: Colors.blueGrey.shade200,
-      ),
+      hintStyle: textStyle.copyWith(height: 1, color: hintColor),
     );
   }
 
-  static BottomSheetThemeData builBottomSheetThemeData(ThemeMode themeMode) {
-    final bgColor =
-        themeMode == ThemeMode.light ? Colors.white : Colors.blueGrey.shade900;
+  static BottomSheetThemeData builBottomSheetThemeData(Color bgColor) {
     return BottomSheetThemeData(
       backgroundColor: bgColor,
       surfaceTintColor: bgColor,
-      modalBackgroundColor: bgColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
@@ -76,73 +102,85 @@ abstract class ThemeConsts {
     );
   }
 
-  static ThemeData buildDarkThemeData() {
-    return ThemeData.dark(useMaterial3: true).copyWith(
-      textTheme: buildTextTheme(ThemeMode.dark),
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
-      scaffoldBackgroundColor: Colors.blueGrey.shade900,
-      primaryColor: Colors.white,
-      hintColor: Colors.white.withOpacity(.5),
-      bottomSheetTheme: builBottomSheetThemeData(ThemeMode.dark),
-      iconTheme: const IconThemeData(color: Colors.white),
-    );
-  }
-
-  static FloatingActionButtonThemeData buildfloatingActionButtonTheme() {
+  static FloatingActionButtonThemeData buildfloatingActionButtonTheme(
+      Color primaryColor) {
     return FloatingActionButtonThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
       elevation: 0,
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: primaryColor,
     );
   }
 
-  static TextTheme buildTextTheme(ThemeMode themeMode) {
-    final color = switch (themeMode) {
-      ThemeMode.light => Colors.blueGrey.shade900,
-      _ => Colors.white,
-    };
+  static TextTheme buildTextTheme(Color primaryColor) {
     return TextTheme(
+      headlineLarge: TextStyle(
+        fontFamily: 'Poppins',
+        color: primaryColor,
+        fontSize: 50,
+      ),
+      headlineMedium: TextStyle(
+        fontFamily: 'Poppins',
+        color: primaryColor,
+        fontSize: 43,
+      ),
+      headlineSmall: TextStyle(
+        fontFamily: 'Poppins',
+        color: primaryColor,
+        fontSize: 36,
+      ),
       titleLarge: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 30,
       ),
       titleMedium: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 26.5,
       ),
       titleSmall: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 23,
       ),
       bodyLarge: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 20,
       ),
       bodyMedium: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 16,
       ),
       bodySmall: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 14,
       ),
       displayLarge: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 11,
       ),
       displayMedium: TextStyle(
         fontFamily: 'Poppins',
-        color: color,
+        color: primaryColor,
         fontSize: 9,
+      ),
+    );
+  }
+
+  static TextButtonThemeData builTextButtonTheme() {
+    return TextButtonThemeData(
+      style: ButtonStyle(
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
       ),
     );
   }

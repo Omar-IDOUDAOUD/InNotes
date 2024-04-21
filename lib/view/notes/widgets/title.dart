@@ -9,7 +9,7 @@ class Title_ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: EdgeInsets.fromLTRB(
+      padding: const EdgeInsets.fromLTRB(
           SpacesConsts.screenPadding, 15, SpacesConsts.screenPadding, 0),
       sliver: SliverToBoxAdapter(
         child: AnimatedSwitcher(
@@ -42,12 +42,9 @@ class Title_ extends StatelessWidget {
           child: Text(
             searchState ? 'Search' : 'My Notes',
             key: ValueKey(searchState),
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 43,
-              color: Colors.blueGrey,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
           ),
         ),
       ),

@@ -21,11 +21,11 @@ class Header extends StatelessWidget {
               Navigator.of(context).pop();
             },
             child: CircleAvatar(
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: Theme.of(context).cardColor,
               radius: 25,
-              child: const Icon(
+              child: Icon(
                 FluentIcons.chevron_left_24_regular,
-                color: Colors.blueGrey,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),
@@ -74,9 +74,9 @@ class _AssignToFolderState extends State<_AssignToFolder>
         child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
-            color: Colors.grey.shade200,
+            color: Theme.of(context).cardColor,
           ),
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
@@ -88,20 +88,15 @@ class _AssignToFolderState extends State<_AssignToFolder>
                 // SizedBox(width: 5),
                 Text(
                   'Assigne To Folder',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    decorationStyle: TextDecorationStyle.solid,
-                    fontFamily: 'Poppins',
-                    height: 1.5,
-                    fontSize: 12,
-                    color: Colors.blueGrey,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        decoration: TextDecoration.underline,
+                        decorationStyle: TextDecorationStyle.solid,
+                      ),
                 ),
                 SizedBox(width: 5),
                 Icon(
                   FluentIcons.chevron_down_24_regular,
                   size: 18,
-                  color: Colors.blueGrey,
                 ),
               ],
             ),
@@ -142,57 +137,58 @@ class _FlagButtonState extends State<FlagButton>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        final size = MediaQuery.sizeOf(context);
-        showMenu(
-            context: context,
-            elevation: 0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            color: Colors.blueGrey.shade50,
-            surfaceTintColor: Colors.blueGrey.shade50,
-            position: RelativeRect.fromDirectional(
-              textDirection: TextDirection.rtl,
-              start: SpacesConsts.screenPadding,
-              top: SpacesConsts.screenPadding + 50 + 10,
-              end: SpacesConsts.screenPadding + 1,
-              bottom: SpacesConsts.screenPadding,
-            ),
-            constraints: BoxConstraints(maxWidth: size.width * 0.40),
-            items: [
-              _PopupMenuItem(
-                onTap: () {},
-                flag: null,
-              ),
-              _PopupMenuItem(
-                onTap: () {},
-                flag: Flag(name: 'To Do', color: Colors.green),
-              ),
-              _PopupMenuItem(
-                onTap: () {},
-                flag: Flag(name: 'Blogs', color: Colors.blueAccent),
-              ),
-              _PopupMenuItem(
-                onTap: () {},
-                flag: Flag(name: 'Important', color: Colors.redAccent),
-              ),
-              _PopupMenuItem(
-                onTap: () {
-                  showAddFlagBottomsheet(context, _addFlagAnimation);
-                },
-                isAddFlagButton: true,
-              ),
-            ]);
-      },
+      onTap: _showMenu,
       child: CircleAvatar(
-        backgroundColor: Colors.grey.shade200,
+        backgroundColor: Theme.of(context).cardColor,
         radius: 25,
-        child: const Icon(
+        child: Icon(
           FluentIcons.flag_24_regular,
-          color: Colors.blueGrey,
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );
+  }
+
+  void _showMenu() {
+    final size = MediaQuery.sizeOf(context);
+
+    showMenu(
+        context: context,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        color: Theme.of(context).cardColor,
+        position: RelativeRect.fromDirectional(
+          textDirection: TextDirection.rtl,
+          start: SpacesConsts.screenPadding,
+          top: SpacesConsts.screenPadding + 50 + 10,
+          end: SpacesConsts.screenPadding + 1,
+          bottom: SpacesConsts.screenPadding,
+        ),
+        constraints: BoxConstraints(maxWidth: size.width * 0.40),
+        items: [
+          _PopupMenuItem(
+            onTap: () {},
+            flag: null,
+          ),
+          _PopupMenuItem(
+            onTap: () {},
+            flag: Flag(name: 'To Do', color: Colors.green),
+          ),
+          _PopupMenuItem(
+            onTap: () {},
+            flag: Flag(name: 'Blogs', color: Colors.blueAccent),
+          ),
+          _PopupMenuItem(
+            onTap: () {},
+            flag: Flag(name: 'Important', color: Colors.redAccent),
+          ),
+          _PopupMenuItem(
+            onTap: () {
+              showAddFlagBottomsheet(context, _addFlagAnimation);
+            },
+            isAddFlagButton: true,
+          ),
+        ]);
   }
 }
 
@@ -234,13 +230,11 @@ class __PopupMenuItemState extends State<_PopupMenuItem> {
                 if (widget.isAddFlagButton)
                   Icon(
                     FluentIcons.add_24_regular,
-                    color: Colors.blueGrey,
                     size: 17,
                   )
                 else if (widget.flag == null)
                   Icon(
                     FluentIcons.flag_24_regular,
-                    color: Colors.blueGrey,
                     size: 17,
                   )
                 else
@@ -254,11 +248,7 @@ class __PopupMenuItemState extends State<_PopupMenuItem> {
                   widget.isAddFlagButton
                       ? 'New Flag'
                       : (widget.flag?.name) ?? 'No Flag',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    color: Colors.blueGrey,
-                  ),
+                  style: Theme.of(context).textTheme.displayLarge,
                 )
               ],
             ),

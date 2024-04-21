@@ -76,7 +76,6 @@ class ToolbarController extends ChangeNotifier {
       icon: Icon(FluentIcons.checkbox_checked_24_regular),
       action: () {
         _closeOrOpenExtraToolbar();
-
         quillController.formatSelection(
             _isToggled(Attribute.list) ? Attribute.list : Attribute.unchecked);
       },

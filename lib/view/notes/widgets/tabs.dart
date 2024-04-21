@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:innotes/constants/spaces.dart';
 import 'package:innotes/view/shared/appbar_under_scrollfade_box.dart';
 
-final _unselectedLabelColor = Colors.blueGrey.withOpacity(.5);
-const _selectedLabelColor = Colors.blueGrey;
-
 class Tabs extends StatelessWidget {
   const Tabs({super.key, required this.controller});
 
@@ -12,6 +9,9 @@ class Tabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final unselectedLabelColor = Theme.of(context).primaryColor.withOpacity(.5);
+    final selectedLabelColor = Theme.of(context).scaffoldBackgroundColor;
+
     return SliverAppBar(
       toolbarHeight: 0,
       pinned: true,
@@ -22,22 +22,26 @@ class Tabs extends StatelessWidget {
         child: Column(
           children: [
             ColoredBox(
-              color: Colors.white,
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: TabBar(
                 tabAlignment: TabAlignment.start,
                 dividerColor: Colors.transparent,
                 controller: controller,
-                labelColor: Colors.white,
-                unselectedLabelColor: _unselectedLabelColor,
-                labelStyle: const TextStyle(
-                    fontFamily: 'Poppins', fontWeight: FontWeight.w700),
-                unselectedLabelStyle: const TextStyle(
-                    fontFamily: 'Poppins', fontWeight: FontWeight.w500),
+                labelColor: selectedLabelColor,
+                unselectedLabelColor: unselectedLabelColor,
+                labelStyle: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(fontWeight: FontWeight.w700),
+                unselectedLabelStyle: Theme.of(context).textTheme.bodySmall!,
                 isScrollable: true,
                 indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: _selectedLabelColor,
+                  color: Theme.of(context).primaryColor,
                 ),
+                splashBorderRadius: BorderRadius.circular(0),
+                overlayColor:
+                    MaterialStatePropertyAll(Theme.of(context).splashColor),
                 indicatorSize: TabBarIndicatorSize.label,
                 indicatorWeight: 0,
                 labelPadding: const EdgeInsets.symmetric(horizontal: 5),
@@ -77,18 +81,15 @@ class _Tab extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _unselectedLabelColor, width: 1.5),
+            border: Border.all(
+              color: Theme.of(context).primaryColor.withOpacity(.5),
+              width: 1.5,
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Center(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 12,
-                ),
-              ),
+              child: Text(label),
             ),
           ),
         ),

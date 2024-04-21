@@ -32,7 +32,6 @@ class _NotesPageState extends State<NotesPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -43,12 +42,11 @@ class _NotesPageState extends State<NotesPage>
             ),
           );
         },
-        backgroundColor: Colors.blueGrey,
         heroTag: 'AddNoteButtonHero',
         elevation: 0,
         child: Icon(
           FluentIcons.add_24_regular,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.background,
         ),
       ),
       body: NestedScrollView(

@@ -16,8 +16,8 @@ class InNotes extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeConsts.buildLightThemeData(),
       darkTheme: ThemeConsts.buildDarkThemeData(),
-      themeMode: ThemeMode.light,
-      home: NotesPage(),
+      themeMode: ThemeMode.system,
+      home: const NotesPage(),
     );
   }
 }

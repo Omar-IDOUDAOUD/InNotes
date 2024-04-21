@@ -79,12 +79,11 @@ class _FloatingToolbar_State extends State<FloatingToolbar_> {
                             EdgeInsets.only(right: SpacesConsts.screenPadding),
                         child: FloatingActionButton(
                           onPressed: () {},
-                          backgroundColor: Colors.blueGrey,
                           heroTag: 'AddNoteButtonHero',
                           elevation: 0,
                           child: Icon(
                             FluentIcons.add_24_regular,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.background,
                           ),
                         ),
                       ),
@@ -122,8 +121,6 @@ class _ButtonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return _Button(icon: Icons.abc);
-
     return SingleChildScrollView(
       reverse: true,
       padding:
@@ -133,7 +130,7 @@ class _ButtonList extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(35),
-          color: Colors.grey.shade200,
+          color: Theme.of(context).cardColor,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
@@ -145,7 +142,7 @@ class _ButtonList extends StatelessWidget {
                 return Row(
                   children: [
                     _Button(button: btnCell),
-                    _divider(),
+                    _divider(context),
                   ],
                 );
               return _Button(button: btnCell);
@@ -156,13 +153,13 @@ class _ButtonList extends StatelessWidget {
     );
   }
 
-  _divider() {
+  _divider(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: SizedBox(
         width: 1,
         height: 15,
-        child: ColoredBox(color: Colors.blueGrey.withOpacity(.5)),
+        child: ColoredBox(color: Theme.of(context).hintColor),
       ),
     );
   }
@@ -203,35 +200,46 @@ class _LinkDialogState extends State<LinkDialog> {
       content: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text(
+              'Link name',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 8),
             TextFormField(
               controller: _controller1,
               style: Theme.of(context).textTheme.bodySmall,
               keyboardType: TextInputType.text,
               validator: (str) => str!.isEmpty ? 'No name found!' : null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Please enter a text for your link',
               ),
               autofocus: true,
               textInputAction: TextInputAction.next,
-              autofillHints: [
+              autofillHints: const [
                 AutofillHints.name,
                 AutofillHints.url,
               ],
             ),
             const SizedBox(height: 16),
+            Text(
+              'Link Url',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 8),
             TextFormField(
               validator: (str) =>
                   GetUtils.isURL(str ?? '') ? null : 'No link found!',
               style: Theme.of(context).textTheme.bodySmall,
               controller: _controller2,
               keyboardType: TextInputType.url,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Please enter the link url',
               ),
               textInputAction: TextInputAction.done,
-              autofillHints: [AutofillHints.url],
+              autofillHints: const [AutofillHints.url],
               autocorrect: false,
               onEditingComplete: submit,
             ),

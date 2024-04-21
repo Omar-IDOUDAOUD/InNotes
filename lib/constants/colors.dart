@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Colors, Color;
+import 'package:flutter/material.dart' show Color, Colors, MaterialColor;
 
 abstract class ColorsConsts {
   static final List<Color> textColors = [
@@ -22,4 +22,25 @@ abstract class ColorsConsts {
     Colors.redAccent,
     Colors.brown,
   ];
+  static final notesColorsLight = [
+    Colors.teal,
+    Colors.orange,
+    Colors.purple,
+    Colors.cyan,
+  ];
+  static final List<MaterialColor> notesColorsDark = [
+    Colors.teal,
+    Colors.orange,
+    Colors.purple,
+    Colors.cyan,
+  ];
+}
+
+abstract class NotesCardColors {
+  List<MaterialColor> get getColors;
+}
+
+class NotesCardColorsLight extends NotesCardColors {
+  @override
+  List<MaterialColor> get getColors => ColorsConsts.notesColorsLight;
 }

@@ -14,8 +14,8 @@ class AppBarUnderScrollFaceBox extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.white,
-              Colors.white.withOpacity(0),
+              Theme.of(context).scaffoldBackgroundColor,
+              Theme.of(context).scaffoldBackgroundColor.withOpacity(0),
             ],
           ),
         ),
