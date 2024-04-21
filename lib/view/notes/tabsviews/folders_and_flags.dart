@@ -41,7 +41,7 @@ class FolderDirectoryBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.blueGrey.shade50,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
@@ -50,7 +50,6 @@ class FolderDirectoryBar extends StatelessWidget {
           children: [
             Icon(
               FluentIcons.chevron_left_24_regular,
-              color: Colors.blueGrey,
               size: 15,
             ),
             SizedBox(width: 10),
@@ -61,11 +60,7 @@ class FolderDirectoryBar extends StatelessWidget {
                 // overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,
                 // textDirection: TextDirection.rtl,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Colors.blueGrey,
-                  fontSize: 13,
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
           ],
@@ -122,7 +117,7 @@ class __FolderState extends State<_Folder> {
         transform: Matrix4.identity()..scale(_selected ? 0.9 : 1.0),
         transformAlignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.blueGrey.shade50,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
               color: _selected ? Colors.indigo : Colors.indigo.withOpacity(0),
@@ -131,22 +126,15 @@ class __FolderState extends State<_Folder> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            const Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   FluentIcons.folder_16_regular,
-                  color: Colors.blueGrey,
                   size: 25,
                 ),
-                Text(
-                  'All Notes',
-                  style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontFamily: 'Poppins',
-                    fontSize: 13,
-                  ),
-                ),
+                Text('All Notes',
+                    style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
             Positioned(
@@ -184,7 +172,7 @@ class _Flags extends StatelessWidget {
       sliver: SliverToBoxAdapter(
         child: DecoratedBox(
           decoration: BoxDecoration(
-              color: Colors.blueGrey.shade50,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: EdgeInsets.all(15),
@@ -193,21 +181,20 @@ class _Flags extends StatelessWidget {
               children: [
                 Text(
                   'Flags',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.blueGrey,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                _getFlagTile('No Flag', 2),
-                Divider(height: 0, thickness: 0),
-                _getFlagTile('Important', 3),
-                Divider(height: 0, thickness: 0),
-                _getFlagTile('To Do', 3),
+                _getFlagTile('No Flag', 2, context),
+                Divider(
+                  height: 1,
+                ),
+                _getFlagTile('Important', 3, context),
+                Divider(
+                  height: 1,
+                ),
+                _getFlagTile('To Do', 3, context),
               ],
             ),
           ),
@@ -216,7 +203,7 @@ class _Flags extends StatelessWidget {
     );
   }
 
-  _getFlagTile(String title, int count) {
+  _getFlagTile(String title, int count, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -224,19 +211,11 @@ class _Flags extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.blueGrey,
-              fontFamily: 'Poppins',
-            ),
+            style: Theme.of(context).textTheme.displayLarge,
           ),
           Text(
             count.toString(),
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.blueGrey,
-              fontFamily: 'Poppins',
-            ),
+            style: Theme.of(context).textTheme.displayLarge,
           ),
         ],
       ),

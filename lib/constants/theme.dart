@@ -23,6 +23,7 @@ abstract class ThemeConsts {
       dialogTheme: const DialogTheme(
           surfaceTintColor: backroundColor, backgroundColor: backroundColor),
       bottomSheetTheme: builBottomSheetThemeData(backroundColor),
+      dividerTheme: DividerThemeData(color: hintColor, thickness: .5),
       inputDecorationTheme:
           buildInputDecorationThemeData(primaryColor, hintColor),
       iconTheme: const IconThemeData(color: primaryColor),
@@ -52,6 +53,7 @@ abstract class ThemeConsts {
       dialogTheme: DialogTheme(
           surfaceTintColor: backroundColor, backgroundColor: backroundColor),
       bottomSheetTheme: builBottomSheetThemeData(backroundColor),
+      dividerTheme: DividerThemeData(color: hintColor, thickness: .5),
       inputDecorationTheme:
           buildInputDecorationThemeData(primaryColor, hintColor),
       iconTheme: const IconThemeData(color: primaryColor),
