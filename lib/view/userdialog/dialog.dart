@@ -1,7 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innotes/constants/animation.dart';
+import 'package:innotes/view/auth/authentication.dart';
 
 class UserDialogRoute<T> extends PageRoute<T> {
   UserDialogRoute() : super();
@@ -149,7 +151,13 @@ class UserDialog extends StatelessWidget {
                           ),
                           _Button(
                             prefix: const Icon(FluentIcons.add_24_regular),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AuthenticationPage(),
+                                  ));
+                            },
                             child: const Text('Add account'),
                           ),
                           Divider(

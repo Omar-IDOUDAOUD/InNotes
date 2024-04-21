@@ -28,6 +28,7 @@ abstract class ThemeConsts {
           buildInputDecorationThemeData(primaryColor, hintColor),
       iconTheme: const IconThemeData(color: primaryColor),
       textButtonTheme: builTextButtonTheme(),
+      pageTransitionsTheme: buildPageTransitionsTheme(),
       floatingActionButtonTheme: buildfloatingActionButtonTheme(primaryColor),
     );
   }
@@ -58,7 +59,17 @@ abstract class ThemeConsts {
           buildInputDecorationThemeData(primaryColor, hintColor),
       iconTheme: const IconThemeData(color: primaryColor),
       textButtonTheme: builTextButtonTheme(),
+      pageTransitionsTheme: buildPageTransitionsTheme(),
       floatingActionButtonTheme: buildfloatingActionButtonTheme(primaryColor),
+    );
+  }
+
+  static PageTransitionsTheme buildPageTransitionsTheme() {
+    return PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+      },
     );
   }
 
@@ -89,6 +100,14 @@ abstract class ThemeConsts {
         borderSide: BorderSide(width: 2, color: primaryColor),
       ),
       hintStyle: textStyle.copyWith(height: 1, color: hintColor),
+      prefixIconColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.focused)) return primaryColor;
+        return hintColor;
+      }),
+      suffixIconColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.focused)) return primaryColor;
+        return hintColor;
+      }),
     );
   }
 
