@@ -26,6 +26,7 @@ class _NotesPageState extends State<NotesPage>
     _tabController.dispose();
     super.dispose();
   }
+ 
 
   bool _searchState = false;
 
