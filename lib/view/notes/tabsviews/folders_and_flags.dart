@@ -1,14 +1,16 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:innotes/constants/animation.dart';
 import 'package:innotes/constants/spaces.dart';
+import 'package:innotes/constants/theme.dart';
 
 class FolderAndFlagsTabView extends StatelessWidget {
   const FolderAndFlagsTabView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.symmetric(
         horizontal: SpacesConsts.screenPadding,
       ),
@@ -41,31 +43,24 @@ class FolderDirectoryBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.blueGrey.shade50,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Row(
           children: [
-            Icon(
+            const Icon(
               FluentIcons.chevron_left_24_regular,
-              color: Colors.blueGrey,
               size: 15,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 'My Notes > Important > Work',
                 maxLines: 1,
-                // overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,
-                // textDirection: TextDirection.rtl,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Colors.blueGrey,
-                  fontSize: 13,
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
           ],
@@ -104,6 +99,9 @@ class __FolderState extends State<_Folder> {
   bool _selected = false;
   @override
   Widget build(BuildContext context) {
+    final selectionColor =
+        Theme.of(context).extension<CustomAppColors>()!.selectedWidgetColor;
+
     return GestureDetector(
       onLongPress: () {
         setState(() {
@@ -122,31 +120,24 @@ class __FolderState extends State<_Folder> {
         transform: Matrix4.identity()..scale(_selected ? 0.9 : 1.0),
         transformAlignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.blueGrey.shade50,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-              color: _selected ? Colors.indigo : Colors.indigo.withOpacity(0),
+              color: _selected ? selectionColor : selectionColor.withOpacity(0),
               width: 2),
         ),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            const Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   FluentIcons.folder_16_regular,
-                  color: Colors.blueGrey,
                   size: 25,
                 ),
-                Text(
-                  'All Notes',
-                  style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontFamily: 'Poppins',
-                    fontSize: 13,
-                  ),
-                ),
+                Text('All Notes',
+                    style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
             Positioned(
@@ -158,10 +149,10 @@ class __FolderState extends State<_Folder> {
                 curve: AnimationConsts.curve,
                 child: CircleAvatar(
                   radius: 10,
-                  backgroundColor: Colors.indigo.withOpacity(.3),
+                  backgroundColor: selectionColor.withOpacity(.3),
                   child: Icon(
                     FluentIcons.checkmark_12_filled,
-                    color: Colors.indigo,
+                    color: selectionColor,
                     size: 12,
                   ),
                 ),
@@ -184,7 +175,7 @@ class _Flags extends StatelessWidget {
       sliver: SliverToBoxAdapter(
         child: DecoratedBox(
           decoration: BoxDecoration(
-              color: Colors.blueGrey.shade50,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: EdgeInsets.all(15),
@@ -193,21 +184,20 @@ class _Flags extends StatelessWidget {
               children: [
                 Text(
                   'Flags',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.blueGrey,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                _getFlagTile('No Flag', 2),
-                Divider(height: 0, thickness: 0),
-                _getFlagTile('Important', 3),
-                Divider(height: 0, thickness: 0),
-                _getFlagTile('To Do', 3),
+                _getFlagTile('No Flag', 2, context),
+                Divider(
+                  height: 1,
+                ),
+                _getFlagTile('Important', 3, context),
+                Divider(
+                  height: 1,
+                ),
+                _getFlagTile('To Do', 3, context),
               ],
             ),
           ),
@@ -216,7 +206,7 @@ class _Flags extends StatelessWidget {
     );
   }
 
-  _getFlagTile(String title, int count) {
+  _getFlagTile(String title, int count, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -224,19 +214,11 @@ class _Flags extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.blueGrey,
-              fontFamily: 'Poppins',
-            ),
+            style: Theme.of(context).textTheme.displayLarge,
           ),
           Text(
             count.toString(),
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.blueGrey,
-              fontFamily: 'Poppins',
-            ),
+            style: Theme.of(context).textTheme.displayLarge,
           ),
         ],
       ),

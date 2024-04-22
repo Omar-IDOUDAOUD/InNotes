@@ -36,7 +36,7 @@ class _NotesPageState extends State<NotesPage>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            CupertinoPageRoute(
+            MaterialPageRoute(
               builder: (_) {
                 return AddNotePage();
               },

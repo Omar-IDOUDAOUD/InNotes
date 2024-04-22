@@ -34,13 +34,6 @@ abstract class ColorsConsts {
     Colors.purple,
     Colors.cyan,
   ];
-}
-
-abstract class NotesCardColors {
-  List<MaterialColor> get getColors;
-}
-
-class NotesCardColorsLight extends NotesCardColors {
-  @override
-  List<MaterialColor> get getColors => ColorsConsts.notesColorsLight;
+  static final selectedWidgetLight = Colors.indigo.shade800; 
+  static final selectedWidgetDark = Colors.indigo.shade100; 
 }

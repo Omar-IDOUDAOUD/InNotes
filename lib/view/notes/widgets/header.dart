@@ -1,7 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:innotes/constants/animation.dart';
 import 'package:innotes/constants/spaces.dart';
+import 'package:innotes/view/userdialog/dialog.dart';
 
 class Header extends StatefulWidget {
   const Header(
@@ -46,12 +48,25 @@ class _HeaderState extends State<Header> {
                     scale: widget.searchState ? 0.8 : 1,
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Theme.of(context).cardColor,
-                          radius: 25,
-                          child: Icon(
-                            FluentIcons.person_24_regular,
-                            color: Theme.of(context).iconTheme.color,
+                        GestureDetector(
+                          onTap: showUserDialog,
+                          child: Hero(
+                            tag: 'user-dialog-avatar-tag',
+                            placeholderBuilder: (context, heroSize, child) =>
+                                SizedBox.fromSize(
+                                    size: heroSize,
+                                    child: Center(
+                                      child: Icon(FluentIcons
+                                          .emoji_smile_slight_24_regular),
+                                    )),
+                            child: CircleAvatar(
+                              backgroundColor: Theme.of(context).cardColor,
+                              radius: 25,
+                              child: Icon(
+                                FluentIcons.person_24_regular,
+                                color: Theme.of(context).iconTheme.color,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 15),
@@ -116,5 +131,19 @@ class _HeaderState extends State<Header> {
         ),
       ),
     );
+  }
+
+  void showUserDialog() {
+    Navigator.push(context, UserDialogRoute());
+
+    // showGeneralDialog(
+    //   context: context,
+    //   barrierDismissible: true,
+    //   useRootNavigator: true,
+    //   barrierLabel: 'user-dialog-barrier-label',
+    //   pageBuilder: (context, animation, secondaryAnimation) {
+    //     return const UserDialog();
+    //   },
+    // );
   }
 }
