@@ -17,7 +17,7 @@ abstract class ThemeConsts {
       primaryColor: primaryColor,
       hintColor: hintColor,
       cardColor: primaryColor.shade50,
-      adaptations: [const Adaptation<NotesCardColorsLight>()],
+      extensions: [CustomAppColors.light()],
       textTheme: buildTextTheme(primaryColor),
       scaffoldBackgroundColor: backroundColor,
       dialogTheme: const DialogTheme(
@@ -28,7 +28,7 @@ abstract class ThemeConsts {
           buildInputDecorationThemeData(primaryColor, hintColor),
       iconTheme: const IconThemeData(color: primaryColor),
       textButtonTheme: builTextButtonTheme(),
-      pageTransitionsTheme: buildPageTransitionsTheme(),
+      // pageTransitionsTheme: buildPageTransitionsTheme(),
       floatingActionButtonTheme: buildfloatingActionButtonTheme(primaryColor),
     );
   }
@@ -48,7 +48,7 @@ abstract class ThemeConsts {
       primaryColor: primaryColor,
       hintColor: hintColor,
       cardColor: Colors.blueGrey.shade600,
-      adaptations: [const Adaptation<NotesCardColorsLight>()],
+      extensions: [CustomAppColors.dark()],
       textTheme: buildTextTheme(primaryColor),
       scaffoldBackgroundColor: backroundColor,
       dialogTheme: DialogTheme(
@@ -59,19 +59,19 @@ abstract class ThemeConsts {
           buildInputDecorationThemeData(primaryColor, hintColor),
       iconTheme: const IconThemeData(color: primaryColor),
       textButtonTheme: builTextButtonTheme(),
-      pageTransitionsTheme: buildPageTransitionsTheme(),
+      // pageTransitionsTheme: buildPageTransitionsTheme(),
       floatingActionButtonTheme: buildfloatingActionButtonTheme(primaryColor),
     );
   }
 
-  static PageTransitionsTheme buildPageTransitionsTheme() {
-    return PageTransitionsTheme(
-      builders: {
-        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-      },
-    );
-  }
+  // static PageTransitionsTheme buildPageTransitionsTheme() {
+  //   return PageTransitionsTheme(
+  //     builders: {
+  //       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+  //       TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+  //     },
+  //   );
+  // }
 
   static InputDecorationTheme buildInputDecorationThemeData(
       Color primaryColor, Color hintColor) {
@@ -203,6 +203,45 @@ abstract class ThemeConsts {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomAppColors extends ThemeExtension<CustomAppColors> {
+  final List<MaterialColor> noteCardColors;
+  final Color selectedWidgetColor;
+
+  CustomAppColors(
+      {required this.noteCardColors, required this.selectedWidgetColor});
+
+  factory CustomAppColors.light() => CustomAppColors(
+        noteCardColors: ColorsConsts.notesColorsLight,
+        selectedWidgetColor: ColorsConsts.selectedWidgetLight,
+      );
+  factory CustomAppColors.dark() => CustomAppColors(
+        noteCardColors: ColorsConsts.notesColorsDark,
+        selectedWidgetColor: ColorsConsts.selectedWidgetDark,
+      );
+
+  @override
+  ThemeExtension<CustomAppColors> copyWith(
+      {noteCardColors, selectedWidgetColor}) {
+    return CustomAppColors(
+      noteCardColors: noteCardColors ?? this.noteCardColors,
+      selectedWidgetColor: selectedWidgetColor ?? this.selectedWidgetColor,
+    );
+  }
+
+  @override
+  ThemeExtension<CustomAppColors> lerp(
+      covariant ThemeExtension<CustomAppColors>? other, double t) {
+    if (other is! CustomAppColors) {
+      return this;
+    }
+    return CustomAppColors(
+      noteCardColors: t >= 0.5 ? other.noteCardColors : noteCardColors,
+      selectedWidgetColor:
+          Color.lerp(selectedWidgetColor, other.selectedWidgetColor, t)!,
     );
   }
 }

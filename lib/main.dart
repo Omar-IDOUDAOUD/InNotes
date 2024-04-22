@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:innotes/view/auth/authentication.dart';
 
 import 'constants/theme.dart';
 import 'view/notes/home.dart';

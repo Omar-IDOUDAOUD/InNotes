@@ -38,7 +38,7 @@ class SignInTabView extends StatelessWidget {
           SizedBox(height: 8),
           TextFormField(
             style: Theme.of(context).textTheme.bodySmall,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Email',
               prefixIcon: Icon(FluentIcons.mail_24_regular),
             ),

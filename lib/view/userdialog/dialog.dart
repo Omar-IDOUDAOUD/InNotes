@@ -66,7 +66,7 @@ class UserDialog extends StatelessWidget {
           },
           onTap: () {},
           child: SizedBox(
-            height: height + 1,
+            height: height + 10,
             child: Padding(
               padding: const EdgeInsets.all(30),
               child: Column(

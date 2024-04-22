@@ -40,7 +40,7 @@ class _AthenticationStatePage extends State<AuthenticationPage>
     super.dispose();
   }
 
-  bool _isRegistering = true;
+  // bool _isRegistering = true;
 
   @override
   Widget build(BuildContext context) {
