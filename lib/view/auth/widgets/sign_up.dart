@@ -1,11 +1,77 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:innotes/constants/animation.dart';
 import 'package:innotes/constants/spaces.dart';
+import 'package:innotes/services/auth.dart';
+import 'package:innotes/view/notes/home.dart';
+import 'package:innotes/view/shared/textfield_error_text.dart';
+import 'package:provider/provider.dart';
 
-class SignUpTabView extends StatelessWidget {
-  const SignUpTabView({super.key});
+class SignUpTabView extends StatefulWidget {
+  const SignUpTabView({super.key, required this.onWaitRespons});
+
+  final Function(bool) onWaitRespons;
+
+  @override
+  State<SignUpTabView> createState() => _SignUpTabViewState();
+}
+
+class _SignUpTabViewState extends State<SignUpTabView> {
+  late final TextEditingController _emailController,
+      _fullNameController,
+      _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController(text: 'pcomar.lenovo@gmail.com');
+    _fullNameController = TextEditingController(text: 'Omar ID');
+    _passwordController = TextEditingController(text: 'omaromaromar');
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // final _formKey = GlobalKey<FormState>();
+
+  bool _waitingRespons = false;
+  AuthenticationRespons? _authResult;
+  bool _obsecurePassword = false;
+
+  // final
+  void submit() async {
+    _authResult = null;
+    _waitingRespons = true;
+    widget.onWaitRespons(true);
+    final authService =
+        Provider.of<AuthenticationService>(context, listen: false);
+    _authResult = await authService.signUpEmailPassword(_emailController.text,
+        _passwordController.text, _fullNameController.text);
+
+    _waitingRespons = false;
+    widget.onWaitRespons(false);
+
+    if (_authResult!.success) {
+      await Future.delayed(Durations.extralong4);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const NotesPage()),
+        (route) => true,
+      );
+    }
+  }
+
+  Widget? buildErrorWidget(String? error) {
+    return error != null ? TextFieldErrorText(message: error) : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +103,10 @@ class SignUpTabView extends StatelessWidget {
           ),
           SizedBox(height: 8),
           TextFormField(
+            controller: _emailController,
             style: Theme.of(context).textTheme.bodySmall,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
+              error: buildErrorWidget(_authResult?.emailError),
               hintText: 'Email',
               prefixIcon: Icon(FluentIcons.mail_24_regular),
             ),
@@ -50,8 +118,10 @@ class SignUpTabView extends StatelessWidget {
           ),
           SizedBox(height: 8),
           TextField(
+            controller: _fullNameController,
             style: Theme.of(context).textTheme.bodySmall,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
+              error: buildErrorWidget(_authResult?.fullNameError),
               hintText: 'Email',
               prefixIcon: Icon(FluentIcons.person_24_regular),
             ),
@@ -63,23 +133,59 @@ class SignUpTabView extends StatelessWidget {
           ),
           SizedBox(height: 8),
           TextField(
+            controller: _passwordController,
             style: Theme.of(context).textTheme.bodySmall,
-            decoration: const InputDecoration(
-              hintText: 'Email',
+            obscureText: _obsecurePassword,
+            decoration: InputDecoration(
+              error: buildErrorWidget(_authResult?.passwordError),
+              hintText: 'Password',
               prefixIcon: Icon(FluentIcons.lock_closed_24_regular),
-              suffixIcon: Icon(FluentIcons.eye_24_regular),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _obsecurePassword = !_obsecurePassword;
+                  });
+                },
+                icon: Icon(
+                  _obsecurePassword
+                      ? FluentIcons.eye_24_regular
+                      : FluentIcons.eye_off_24_regular,
+                ),
+                tooltip: 'obsecure password',
+              ),
             ),
           ),
           Spacer(),
+          AnimatedOpacity(
+            duration: AnimationConsts.defaultDuration,
+            curve: AnimationConsts.curve,
+            opacity: _authResult?.error == null ? 0 : 1,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.error.withOpacity(.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: TextFieldErrorText(message: _authResult?.error ?? ""),
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
           MaterialButton(
             color: Theme.of(context).primaryColor,
+            disabledColor: Color.lerp(
+              Theme.of(context).primaryColor,
+              Theme.of(context).scaffoldBackgroundColor,
+              0.5,
+            ),
             height: 55,
             elevation: 0,
             focusElevation: 0,
             highlightElevation: 0,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            onPressed: () {},
+            onPressed: _waitingRespons ? null : submit,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -87,16 +193,25 @@ class SignUpTabView extends StatelessWidget {
                   width: 25,
                 ),
                 Text(
-                  'Log-In',
+                  'Sign-Up',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).scaffoldBackgroundColor,
                       ),
                 ),
-                Icon(
-                  FluentIcons.chevron_right_24_regular,
-                  size: 25,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                )
+                _waitingRespons
+                    ? SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(
+                          strokeCap: StrokeCap.round,
+                          strokeWidth: 2,
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                      )
+                    : Icon(
+                        FluentIcons.chevron_right_24_regular,
+                        size: 25,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                      )
               ],
             ),
           ),

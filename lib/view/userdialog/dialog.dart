@@ -1,9 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innotes/constants/animation.dart';
-import 'package:innotes/view/auth/authentication.dart';
+import 'package:innotes/services/auth.dart';
+import 'package:innotes/view/userdialog/widget/button.dart';
+import 'package:innotes/view/userdialog/widget/signed_in_tiles.dart';
+import 'package:innotes/view/userdialog/widget/signed_out_tile.dart';
+import 'package:innotes/view/userdialog/widget/theme_select.dart';
+import 'package:provider/provider.dart';
 
 class UserDialogRoute<T> extends PageRoute<T> {
   UserDialogRoute() : super();
@@ -55,6 +62,7 @@ class UserDialog extends StatelessWidget {
   // double _dragDownOffset = 0;
   @override
   Widget build(BuildContext context) {
+    final isUserSignedIn = context.read<AuthenticationService>().signedIn;
     final height = MediaQuery.sizeOf(context).height;
     return GestureDetector(
       onTap: () => Navigator.pop(context),
@@ -90,110 +98,14 @@ class UserDialog extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _Button(
-                            prefix: const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 12,
-                            ),
-                            suffix:
-                                const Icon(FluentIcons.checkmark_24_regular),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Omar Idoudaoud',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(height: 1.1)),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  'pcomar.lenovo@gmail.com',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        color: Theme.of(context).hintColor,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 40),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'All your data are synced',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        color: Theme.of(context).hintColor,
-                                      ),
-                                ),
-                                const SizedBox(width: 5),
-                                Icon(
-                                  FluentIcons.cloud_sync_16_regular,
-                                  color: Theme.of(context).hintColor,
-                                  size: 12,
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          _Button(
-                            prefix:
-                                const Icon(FluentIcons.arrow_exit_20_regular),
-                            onTap: () {},
-                            child: const Text('Sign out'),
-                          ),
-                          _Button(
-                            prefix: const Icon(FluentIcons.add_24_regular),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AuthenticationPage(),
-                                  ));
-                            },
-                            child: const Text('Add account'),
-                          ),
+                          isUserSignedIn ? SignedInWidget() : SignedOutWidget(),
                           Divider(
                             indent: 40,
                             endIndent: 8,
                             height: 15,
                           ),
-                          _Button(
-                            onTap: () {},
-                            prefix:
-                                const Icon(FluentIcons.weather_moon_24_regular),
-                            suffix:
-                                const Icon(FluentIcons.chevron_down_24_regular),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('App Theme',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(height: 1.1)),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                  'Dark',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        color: Theme.of(context).hintColor,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        
+                          ThemeModeSelector(),
                         ],
                       ),
                     ),
@@ -208,56 +120,4 @@ class UserDialog extends StatelessWidget {
   }
 
   // bool _showAppThemes = false;
-}
-
-class _Button extends StatelessWidget {
-  const _Button(
-      {super.key,
-      required this.prefix,
-      required this.child,
-      this.suffix,
-      this.onTap});
-  final Widget prefix;
-  final Widget child;
-  final Widget? suffix;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton.icon(
-      onPressed: onTap,
-      icon: prefix,
-      label: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          child,
-          if (suffix != null) suffix!,
-        ],
-      ),
-      style: ButtonStyle(
-        alignment: Alignment.centerLeft,
-        iconColor: MaterialStatePropertyAll(Theme.of(context).hintColor),
-        // iconSize: MaterialStatePropertyAll(30),
-
-        textStyle:
-            MaterialStatePropertyAll(Theme.of(context).textTheme.bodyMedium),
-        padding: const MaterialStatePropertyAll(
-          EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 15,
-          ),
-        ),
-        shape: MaterialStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      ),
-    );
-    // MaterialButton(
-    //   onPressed: onTap,
-    //   shape:,
-    // );
-  }
 }

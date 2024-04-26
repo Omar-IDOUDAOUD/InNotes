@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innotes/constants/animation.dart';
 import 'package:innotes/constants/spaces.dart';
+import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/userdialog/dialog.dart';
+import 'package:provider/provider.dart';
 
 class Header extends StatefulWidget {
   const Header(
@@ -34,7 +37,7 @@ class _HeaderState extends State<Header> {
       elevation: 0,
       forceMaterialTransparency: true,
       bottom: PreferredSize(
-        preferredSize: const Size(double.infinity, 70),
+        preferredSize: Size(width, 70),
         child: ColoredBox(
           color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
@@ -54,11 +57,12 @@ class _HeaderState extends State<Header> {
                             tag: 'user-dialog-avatar-tag',
                             placeholderBuilder: (context, heroSize, child) =>
                                 SizedBox.fromSize(
-                                    size: heroSize,
-                                    child: Center(
-                                      child: Icon(FluentIcons
-                                          .emoji_smile_slight_24_regular),
-                                    )),
+                              size: heroSize,
+                              child: const Center(
+                                child: Icon(
+                                    FluentIcons.emoji_smile_slight_24_regular),
+                              ),
+                            ),
                             child: CircleAvatar(
                               backgroundColor: Theme.of(context).cardColor,
                               radius: 25,
@@ -70,9 +74,19 @@ class _HeaderState extends State<Header> {
                           ),
                         ),
                         const SizedBox(width: 15),
-                        Text(
-                          'Hi, Omar',
-                          style: Theme.of(context).textTheme.bodyLarge,
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Text(
+                                'Hi, ',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: _UserEditableName(),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -135,15 +149,72 @@ class _HeaderState extends State<Header> {
 
   void showUserDialog() {
     Navigator.push(context, UserDialogRoute());
+  }
+}
 
-    // showGeneralDialog(
-    //   context: context,
-    //   barrierDismissible: true,
-    //   useRootNavigator: true,
-    //   barrierLabel: 'user-dialog-barrier-label',
-    //   pageBuilder: (context, animation, secondaryAnimation) {
-    //     return const UserDialog();
-    //   },
-    // );
+class _UserEditableName extends StatefulWidget {
+  const _UserEditableName({super.key});
+
+  @override
+  State<_UserEditableName> createState() => __UserEditableNameState();
+}
+
+class __UserEditableNameState extends State<_UserEditableName> {
+  late final TextEditingController _nameController;
+  late final AuthenticationService _authenticationService;
+  late final String _displayName;
+
+  @override
+  void initState() {
+    super.initState();
+    _authenticationService =
+        Provider.of<AuthenticationService>(context, listen: false);
+
+    _nameController = TextEditingController(
+      text: _authenticationService.signedIn
+          ? _authenticationService.user.displayName
+          : _authenticationService.getDsiplayName(),
+    );
+    _displayName = _authenticationService.signedIn
+        ? _authenticationService.user.displayName!
+        : _authenticationService.getDsiplayName();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _nameController,
+      keyboardType: TextInputType.name,
+      onSubmitted: (name) {
+        if (name.isEmpty) {
+          _nameController.text = _displayName;
+          return;
+        }
+        _authenticationService.updateDisplayName(name);
+      },
+      onTapOutside: (_) {
+        _nameController.text = _displayName;
+      },
+      textInputAction: TextInputAction.done,
+      style: Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.1),
+      decoration: InputDecoration(
+        filled: false,
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        isCollapsed: true,
+        hintText: 'Provide a Name',
+        contentPadding: EdgeInsets.zero,
+        hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              height: 1.1,
+              color: Theme.of(context).hintColor,
+            ),
+      ),
+    );
   }
 }

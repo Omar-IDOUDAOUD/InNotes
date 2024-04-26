@@ -16,31 +16,22 @@ class AuthenticationPage extends StatefulWidget {
 class _AthenticationStatePage extends State<AuthenticationPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  late final TextEditingController _emailController,
-      _passwordController,
-      _phoneNumberController;
 
   @override
   void initState() {
     super.initState();
-
-    _emailController = TextEditingController(text: 'omar@omar.omar');
-    _passwordController = TextEditingController(text: 'omaromar');
-    _phoneNumberController = TextEditingController();
-
     _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _phoneNumberController.dispose();
     _tabController.dispose();
+
     super.dispose();
   }
 
   // bool _isRegistering = true;
+  bool _waitingRespons = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +49,23 @@ class _AthenticationStatePage extends State<AuthenticationPage>
           Expanded(
             child: TabBarView(
               controller: _tabController,
+              physics:
+                  _waitingRespons ? const NeverScrollableScrollPhysics() : null,
               children: [
-                SignInTabView(),
-                SignUpTabView(),
+                SignInTabView(
+                  onWaitRespons: (b) {
+                    setState(() {
+                      _waitingRespons = b;
+                    });
+                  },
+                ),
+                SignUpTabView(
+                  onWaitRespons: (b) {
+                    setState(() {
+                      _waitingRespons = b;
+                    });
+                  },
+                ),
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:innotes/view/notes/home.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -11,7 +12,15 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    //
+
+    _initialize().then((value) => Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const NotesPage()),
+        ));
+  }
+
+  Future _initialize() async {
+    await Future.delayed(const Duration(seconds: 2));
   }
 
   @override
@@ -48,8 +57,7 @@ class _SplashPageState extends State<SplashPage> {
               'By Omar ID.DAOUD',
               style: Theme.of(context)
                   .textTheme
-                  .bodySmall!
-                  .copyWith(color: Theme.of(context).hintColor),
+                  .bodySmall,
             ),
             SizedBox(height: 15)
           ],
