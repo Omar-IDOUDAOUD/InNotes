@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innotes/constants/animation.dart';
+import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/auth/authentication.dart';
+import 'package:provider/provider.dart';
 
 class UserDialogRoute<T> extends PageRoute<T> {
   UserDialogRoute() : super();
@@ -30,15 +34,17 @@ class UserDialogRoute<T> extends PageRoute<T> {
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
+
       Animation<double> secondaryAnimation, Widget child) {
     return SlideTransition(
-      position: animation.drive(CurveTween(curve: AnimationConsts.curve)).drive(
+position: animation.drive(CurveTween(curve: AnimationConsts.curve)).drive(
             Tween<Offset>(
               begin: const Offset(0, 1),
               end: const Offset(0, 0),
+
             ),
           ),
-      child: child,
+      child: child, 
     );
   }
 
@@ -55,6 +61,7 @@ class UserDialog extends StatelessWidget {
   // double _dragDownOffset = 0;
   @override
   Widget build(BuildContext context) {
+    final isUserSignedIn = context.read<AuthenticationService>().signedIn;
     final height = MediaQuery.sizeOf(context).height;
     return GestureDetector(
       onTap: () => Navigator.pop(context),
@@ -90,76 +97,9 @@ class UserDialog extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _Button(
-                            prefix: const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 12,
-                            ),
-                            suffix:
-                                const Icon(FluentIcons.checkmark_24_regular),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Omar Idoudaoud',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(height: 1.1)),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  'pcomar.lenovo@gmail.com',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        color: Theme.of(context).hintColor,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 40),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'All your data are synced',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .copyWith(
-                                        color: Theme.of(context).hintColor,
-                                      ),
-                                ),
-                                const SizedBox(width: 5),
-                                Icon(
-                                  FluentIcons.cloud_sync_16_regular,
-                                  color: Theme.of(context).hintColor,
-                                  size: 12,
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          _Button(
-                            prefix:
-                                const Icon(FluentIcons.arrow_exit_20_regular),
-                            onTap: () {},
-                            child: const Text('Sign out'),
-                          ),
-                          _Button(
-                            prefix: const Icon(FluentIcons.add_24_regular),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AuthenticationPage(),
-                                  ));
-                            },
-                            child: const Text('Add account'),
-                          ),
+                          isUserSignedIn
+                              ? _SignedInWidget()
+                              : _SignedOutWidget(),
                           Divider(
                             indent: 40,
                             endIndent: 8,
@@ -208,6 +148,179 @@ class UserDialog extends StatelessWidget {
   }
 
   // bool _showAppThemes = false;
+}
+
+class _SignedInWidget extends StatefulWidget {
+  _SignedInWidget({super.key});
+
+  @override
+  State<_SignedInWidget> createState() => _SignedInWidgetState();
+}
+
+class _SignedInWidgetState extends State<_SignedInWidget> {
+  late final TextEditingController _nameController;
+  late final AuthenticationService _authenticationService;
+  late final User _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _authenticationService =
+        Provider.of<AuthenticationService>(context, listen: false);
+    print(_authenticationService.signedIn);
+    _user = _authenticationService.user;
+    _nameController = TextEditingController(text: _user.displayName);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _Button(
+          prefix: CircleAvatar(
+            backgroundColor: Colors.white,
+            // foregroundImage:
+            //     _user.photoURL != null ? NetworkImage(_user.photoURL!) : null,
+            radius: 12,
+          ),
+          suffix: const Icon(FluentIcons.checkmark_24_regular),
+          child: Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _nameController,
+                  keyboardType: TextInputType.name,
+                  onSubmitted: (name) {
+                    if (name.isEmpty) {
+                      _nameController.text = _user.displayName!;
+                      return;
+                    }
+                    _authenticationService.updateDisplayName(name);
+                  },
+                  onTapOutside: (_) {
+                    _nameController.text = _user.displayName!;
+                  },
+                  textInputAction: TextInputAction.done,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(height: 1.1),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    isCollapsed: true,
+                    hintText: 'Provide a Name',
+                    contentPadding: EdgeInsets.zero,
+                    hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          height: 1.1,
+                          color: Theme.of(context).hintColor,
+                        ),
+                        filled: false, 
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  _user.email!,
+                  style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                        color: Theme.of(context).hintColor,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 40),
+          child: Row(
+            children: [
+              Text(
+                'All your data are synced',
+                style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                      color: Theme.of(context).hintColor,
+                    ),
+              ),
+              const SizedBox(width: 5),
+              Icon(
+                FluentIcons.cloud_sync_16_regular,
+                color: Theme.of(context).hintColor,
+                size: 12,
+              )
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        _Button(
+          prefix: const Icon(FluentIcons.arrow_exit_20_regular),
+          onTap: () {
+            Navigator.pop(context);
+            _authenticationService.signOut(context);
+          },
+          child: const Text('Sign out'),
+        ),
+        _Button(
+          prefix: const Icon(FluentIcons.add_24_regular),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AuthenticationPage(),
+                ));
+          },
+          child: const Text('Add account'),
+        ),
+      ],
+    );
+  }
+}
+
+class _SignedOutWidget extends StatelessWidget {
+  const _SignedOutWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _Button(
+          prefix: const Icon(FluentIcons.person_add_24_regular),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AuthenticationPage(),
+                ));
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Sign In',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(height: 1.1)),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                'To sync all your data on cloude',
+                style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                      color: Theme.of(context).hintColor,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class _Button extends StatelessWidget {

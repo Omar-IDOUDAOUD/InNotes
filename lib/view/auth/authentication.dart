@@ -16,27 +16,17 @@ class AuthenticationPage extends StatefulWidget {
 class _AthenticationStatePage extends State<AuthenticationPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  late final TextEditingController _emailController,
-      _passwordController,
-      _phoneNumberController;
 
   @override
   void initState() {
     super.initState();
-
-    _emailController = TextEditingController(text: 'omar@omar.omar');
-    _passwordController = TextEditingController(text: 'omaromar');
-    _phoneNumberController = TextEditingController();
-
     _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _phoneNumberController.dispose();
     _tabController.dispose();
+
     super.dispose();
   }
 

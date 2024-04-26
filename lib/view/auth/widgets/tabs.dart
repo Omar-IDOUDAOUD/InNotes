@@ -10,6 +10,7 @@ class Tabs extends StatelessWidget {
     return TabBar(
       controller: tabController,
       labelStyle: Theme.of(context)
+      
           .textTheme
           .bodyMedium!
           .copyWith(fontWeight: FontWeight.w700),

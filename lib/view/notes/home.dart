@@ -1,5 +1,4 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:innotes/view/addnote/addnote.dart';
 import 'package:innotes/view/notes/tabsviews/folders_and_flags.dart';
@@ -26,7 +25,6 @@ class _NotesPageState extends State<NotesPage>
     _tabController.dispose();
     super.dispose();
   }
- 
 
   bool _searchState = false;
 

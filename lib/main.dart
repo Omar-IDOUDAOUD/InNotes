@@ -1,16 +1,28 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:innotes/model/user_profile.dart';
+import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/splash/splash.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 
 import 'constants/theme.dart';
-import 'view/notes/home.dart';
+
+late final SharedPreferences globaleSharedPreferencesInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  globaleSharedPreferencesInstance = await SharedPreferences.getInstance();
+
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(UserProfileAdapter());
+  Hive.registerAdapter(AuthCredentials2Adapter());
   runApp(const InNotes());
 }
 
@@ -19,12 +31,17 @@ class InNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeConsts.buildLightThemeData(),
-      darkTheme: ThemeConsts.buildDarkThemeData(),
-      themeMode: ThemeMode.system,
-      home: const SplashPage(),
+    return Provider<AuthenticationService>(
+      create: (BuildContext context) => AuthenticationService(),
+      builder: (_, __) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeConsts.buildLightThemeData(),
+          darkTheme: ThemeConsts.buildDarkThemeData(),
+          themeMode: ThemeMode.system,
+          home: const SplashPage(),
+        );
+      },
     );
   }
 }
