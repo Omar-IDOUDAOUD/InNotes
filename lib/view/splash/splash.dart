@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
+import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/notes/home.dart';
+import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
+  const SplashPage({super.key, this.doSignOut = false});
 
+  final bool doSignOut;
   @override
   State<SplashPage> createState() => _SplashPageState();
 }
@@ -13,14 +17,17 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    _initialize().then((value) => Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const NotesPage()),
-        ));
+    Future.wait([
+      _initialize(),
+      1.seconds.delay(),
+    ]).then((value) => Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const NotesPage())));
   }
 
   Future _initialize() async {
-    await Future.delayed(const Duration(seconds: 2));
+    final authService = context.read<AuthenticationService>();
+    if (widget.doSignOut) authService.signOut(context);
+    await authService.signInAnonymouslyIfNeeded();
   }
 
   @override
@@ -55,9 +62,7 @@ class _SplashPageState extends State<SplashPage> {
             SizedBox(height: 30),
             Text(
               'By Omar ID.DAOUD',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             SizedBox(height: 15)
           ],

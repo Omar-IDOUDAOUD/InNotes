@@ -3,17 +3,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:innotes/main.dart';
 import 'package:innotes/view/splash/splash.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class AuthenticationService {
   final _fbAuth = FirebaseAuth.instance;
-
-  // void onCreate() {
-  //   _fbAuth.authStateChanges().listen((event) {
-  //     print('USER STATE EVENT: $event');
-  //   });
-  // }
 
   /// if anonumous, return false
   bool get signedIn => !(_fbAuth.currentUser?.isAnonymous ?? true);
@@ -21,6 +18,12 @@ class AuthenticationService {
   User get user => _fbAuth.currentUser!;
 
   String get userId => user.uid;
+
+  Future<void> signInAnonymouslyIfNeeded() async {
+    if (_fbAuth.currentUser == null) {
+      await _fbAuth.signInAnonymously();
+    }
+  }
 
   AuthenticationRespons _validatFields(String email, String pass,
       [String? fullName]) {
@@ -116,15 +119,13 @@ class AuthenticationService {
         'Pretty';
   }
 
-  void signOut(context) async {
+  void signOut(BuildContext context) async {
+    if (user.isAnonymous) {
+      // final firestore = FirebaseFirestore.instance;
+      // final notesProvider = Provider.of<NotesProvider>(context, listen: false);
+      /// TODO: delete all notes for this user, from notesprovider
+    }
     await _fbAuth.signOut();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SplashPage(),
-      ),
-      (route) => true,
-    );
   }
 
   ///TODO: look for an utilisation for those two functions:

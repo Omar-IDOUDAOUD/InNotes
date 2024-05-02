@@ -23,7 +23,7 @@ void main() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(UserProfileAdapter());
-  Hive.registerAdapter(AuthCredentials2Adapter());
+  Hive.registerAdapter(AuthCredentialsAdapter());
 
   runApp(
     MultiProvider(
