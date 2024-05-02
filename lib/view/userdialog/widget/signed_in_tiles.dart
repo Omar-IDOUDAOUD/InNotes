@@ -3,6 +3,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/auth/authentication.dart';
+import 'package:innotes/view/splash/splash.dart';
 import 'package:innotes/view/userdialog/widget/button.dart';
 import 'package:provider/provider.dart';
 
@@ -118,7 +119,13 @@ class _SignedInWidgetState extends State<SignedInWidget> {
           prefix: const Icon(FluentIcons.arrow_exit_20_regular),
           onTap: () {
             Navigator.pop(context);
-            _authenticationService.signOut(context);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SplashPage(doSignOut: true),
+              ),
+              (route) => false,
+            );
           },
           child: const Text('Sign out'),
         ),

@@ -52,7 +52,7 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
           typeId == other.typeId;
 }
 
-class AuthCredentials2Adapter extends TypeAdapter<AuthCredentials2> {
+class AuthCredentialsAdapter extends TypeAdapter<AuthCredentials2> {
   @override
   final int typeId = 2;
 
@@ -90,7 +90,7 @@ class AuthCredentials2Adapter extends TypeAdapter<AuthCredentials2> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AuthCredentials2Adapter &&
+      other is AuthCredentialsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

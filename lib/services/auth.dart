@@ -2,19 +2,17 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:innotes/main.dart';
 import 'package:innotes/view/splash/splash.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class AuthenticationService {
-  AuthenticationService() {
-    _onCreate();
-  }
+  // AuthenticationService() {
+  //   _onCreate();
+  // }
   final _fbAuth = FirebaseAuth.instance;
-
-  void _onCreate() {
-    final x = _fbAuth.currentUser;
-    print('ON CREATE AUTH SERVICE, x=$x');
-  }
 
   /// if anonumous, return false
   bool get signedIn => !(_fbAuth.currentUser?.isAnonymous ?? true);
@@ -24,6 +22,12 @@ class AuthenticationService {
   String get userId {
     print('get user id , ${user}');
     return user.uid;
+  }
+
+  Future<void> signInAnonymouslyIfNeeded() async {
+    if (_fbAuth.currentUser == null) {
+      await _fbAuth.signInAnonymously();
+    }
   }
 
   AuthenticationRespons _validatFields(String email, String pass,
@@ -120,17 +124,13 @@ class AuthenticationService {
         'Pretty';
   }
 
-  void signOut(context) async {
+  void signOut(BuildContext context) async {
+    if (user.isAnonymous) {
+      // final firestore = FirebaseFirestore.instance;
+      // final notesProvider = Provider.of<NotesProvider>(context, listen: false);
+      /// TODO: delete all notes for this user, from notesprovider
+    }
     await _fbAuth.signOut();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SplashPage(),
-      ),
-      (route) => true,
-    );
-
-    ///TODO: sign in to anonymous user directly (call this func inside splas screen only)!
   }
 
   ///TODO: look for an utilisation for those two functions:
