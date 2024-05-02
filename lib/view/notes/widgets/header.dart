@@ -81,8 +81,7 @@ class _HeaderState extends State<Header> {
                                 'Hi, ',
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
-                              SizedBox(width: 8),
-                              Expanded(
+                              const Expanded(
                                 child: _UserEditableName(),
                               ),
                             ],

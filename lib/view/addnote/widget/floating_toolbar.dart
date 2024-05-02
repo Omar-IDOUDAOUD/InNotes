@@ -5,30 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:innotes/constants/animation.dart';
+import 'package:innotes/providers/addnote/new_note.dart';
+import 'package:innotes/view/notes/home.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get_utils/get_utils.dart';
 
 import 'package:innotes/constants/spaces.dart';
-import 'package:innotes/controller/addnote/toolbar.dart';
+import 'package:innotes/providers/addnote/toolbar.dart';
 
-class FloatingToolbar_ extends StatefulWidget {
-  const FloatingToolbar_(
-      {super.key, required this.controller, required this.test});
-  final Function() test;
-
-  final QuillController controller;
+class FloatingToolbar2 extends StatefulWidget {
+  const FloatingToolbar2({super.key});
 
   @override
-  State<FloatingToolbar_> createState() => _FloatingToolbar_State();
+  State<FloatingToolbar2> createState() => _FloatingToolbarState();
 }
 
-class _FloatingToolbar_State extends State<FloatingToolbar_> {
-  // QuillController get _controller => widget.controller;
-
+class _FloatingToolbarState extends State<FloatingToolbar2> {
   @override
   Widget build(BuildContext context) {
     final toolbarController =
-        Provider.of<ToolbarController>(context, listen: true);
+        Provider.of<ToolbarProvider>(context, listen: true);
     final showExtraToolbar = toolbarController.extraToolbar != null;
     return Positioned(
       bottom: 0,
@@ -56,7 +52,8 @@ class _FloatingToolbar_State extends State<FloatingToolbar_> {
                   forwardBuilder: (context, animation, child) =>
                       SlideTransition(
                     position: animation.drive(
-                      Tween<Offset>(begin: Offset(0, 0.2), end: Offset.zero),
+                      Tween<Offset>(
+                          begin: const Offset(0, 0.2), end: Offset.zero),
                     ),
                     child: child,
                   ),
@@ -74,18 +71,10 @@ class _FloatingToolbar_State extends State<FloatingToolbar_> {
                         buttons: toolbarController.extraToolbar!,
                         key: ValueKey(toolbarController.extraToolbar),
                       )
-                    : Padding(
+                    : const Padding(
                         padding:
                             EdgeInsets.only(right: SpacesConsts.screenPadding),
-                        child: FloatingActionButton(
-                          onPressed: () {},
-                          heroTag: 'AddNoteButtonHero',
-                          elevation: 0,
-                          child: Icon(
-                            FluentIcons.add_24_regular,
-                            color: Theme.of(context).colorScheme.background,
-                          ),
-                        ),
+                        child: _AddButton(),
                       ),
               ),
               const SizedBox(height: 10),
@@ -95,6 +84,51 @@ class _FloatingToolbar_State extends State<FloatingToolbar_> {
           );
         },
       ),
+    );
+  }
+}
+
+class _AddButton extends StatefulWidget {
+  const _AddButton({super.key});
+
+  @override
+  State<_AddButton> createState() => __AddButtonState();
+}
+
+class __AddButtonState extends State<_AddButton> {
+  bool _loading = false;
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: _loading
+          ? null
+          : () async {
+              final provider = context.read<CreateNoteProvider>();
+              setState(() {
+                _loading = true;
+              });
+              await provider.submitNote().then((value) {
+                setState(() {
+                  _loading = false;
+                });
+                Navigator.pop(context, true);
+              });
+            },
+      heroTag: addNoteButtonHeroTag,
+      elevation: 0,
+      child: _loading
+          ? SizedBox.square(
+              dimension: 25,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                strokeCap: StrokeCap.round,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            )
+          : Icon(
+              FluentIcons.add_24_regular,
+              color: Theme.of(context).colorScheme.background,
+            ),
     );
   }
 }

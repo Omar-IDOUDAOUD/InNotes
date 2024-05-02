@@ -1,28 +1,5 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:innotes/constants/spaces.dart';
-
-class NotesGrideTabView extends StatelessWidget {
-  const NotesGrideTabView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MasonryGridView.builder(
-      gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return const NoteCard();
-      },
-      padding:
-          const EdgeInsets.symmetric(horizontal: SpacesConsts.screenPadding),
-      itemCount: 6,
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 10,
-    );
-  }
-}
 
 class NoteCard extends StatelessWidget {
   const NoteCard({super.key});

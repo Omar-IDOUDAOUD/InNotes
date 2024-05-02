@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +30,7 @@ void main() async {
     MultiProvider(
       providers: [
         Provider<AuthenticationService>(
+            lazy: false,
             create: (BuildContext context) => AuthenticationService()),
         ListenableProvider<AppSettingsService>(
             create: (BuildContext context) => AppSettingsService()),

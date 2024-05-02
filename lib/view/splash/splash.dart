@@ -1,5 +1,9 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:flutter/material.dart';
+import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/notes/home.dart';
+import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -55,9 +59,7 @@ class _SplashPageState extends State<SplashPage> {
             SizedBox(height: 30),
             Text(
               'By Omar ID.DAOUD',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             SizedBox(height: 15)
           ],

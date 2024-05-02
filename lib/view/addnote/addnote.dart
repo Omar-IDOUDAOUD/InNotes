@@ -1,16 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:innotes/constants/spaces.dart';
-import 'package:innotes/controller/addnote/toolbar.dart';
+import 'package:innotes/providers/addnote/toolbar.dart';
+import 'package:innotes/providers/addnote/new_note.dart';
+import 'package:innotes/providers/notes/notes.dart';
+import 'package:innotes/model/note_document.dart';
 import 'package:innotes/view/addnote/widget/floating_toolbar.dart';
 import 'package:innotes/view/addnote/widget/header.dart';
 import 'package:innotes/view/addnote/widget/text_editor.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
 
-class AddNotePage extends StatelessWidget {
-  AddNotePage({super.key});
+class AddNotePage extends StatefulWidget {
+  const AddNotePage({super.key, this.note});
+  final NoteDocument? note;
+
+  @override
+  State<AddNotePage> createState() => _AddNotePageState();
+}
+
+class _AddNotePageState extends State<AddNotePage> {
+  /// As Json String:
+
   // final EditorState _editorState = EditorState.blank();
-  final QuillController _quillController = QuillController.basic();
+  late final QuillController _quillController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _quillController = widget.note == null
+        ? QuillController.basic()
+        : QuillController(
+            document: Document.fromJson(widget.note!.contentJson!),
+            selection: TextSelection.collapsed(
+                offset: widget.note!.lastSelectionOffset));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +49,29 @@ class AddNotePage extends StatelessWidget {
           child: Header(),
         ),
       ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          TextEditor(controller: _quillController),
-          ChangeNotifierProvider<ToolbarController>(
-            create: (context) => ToolbarController(
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => ToolbarProvider(
                 quillController: _quillController, context: context),
-            child: FloatingToolbar_(
-              controller: _quillController,
-              test: () {},
+          ),
+          Provider(
+            create: (context) => CreateNoteProvider(
+              quillController: _quillController,
+              notesProvider: context.read<NotesProvider>(),
+              modifyDoc: widget.note,
             ),
           ),
         ],
+        builder: (context, _) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              TextEditor(),
+              FloatingToolbar2(),
+            ],
+          );
+        },
       ),
     );
   }

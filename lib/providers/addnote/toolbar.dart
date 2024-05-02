@@ -49,11 +49,14 @@ class ToolbarButton {
   });
 }
 
-class ToolbarController extends ChangeNotifier {
-  ToolbarController({required this.quillController, required this.context});
+class ToolbarProvider extends ChangeNotifier {
+  ToolbarProvider(
+      {required QuillController quillController, required BuildContext context})
+      : _quillController = quillController,
+        _context = context;
 
-  final QuillController quillController;
-  final BuildContext context;
+  final QuillController _quillController;
+  final BuildContext _context;
 
   List<ToolbarButton>? extraToolbar;
   void _closeOrOpenExtraToolbar([children]) {
@@ -66,7 +69,7 @@ class ToolbarController extends ChangeNotifier {
   }
 
   bool _isToggled(Attribute attribute) {
-    return quillController.getSelectionStyle().attributes[attribute.key] !=
+    return _quillController.getSelectionStyle().attributes[attribute.key] !=
         null;
   }
 
@@ -76,7 +79,7 @@ class ToolbarController extends ChangeNotifier {
       icon: Icon(FluentIcons.checkbox_checked_24_regular),
       action: () {
         _closeOrOpenExtraToolbar();
-        quillController.formatSelection(
+        _quillController.formatSelection(
             _isToggled(Attribute.list) ? Attribute.list : Attribute.unchecked);
       },
       hasDividerToLeft: true,
@@ -114,7 +117,7 @@ class ToolbarController extends ChangeNotifier {
       icon: Icon(FluentIcons.text_bold_24_regular),
       action: () {
         _closeOrOpenExtraToolbar();
-        quillController.formatSelection(_isToggled(Attribute.bold)
+        _quillController.formatSelection(_isToggled(Attribute.bold)
             ? Attribute.clone(Attribute.bold, null)
             : Attribute.bold);
       },
@@ -125,7 +128,7 @@ class ToolbarController extends ChangeNotifier {
       action: () {
         _closeOrOpenExtraToolbar();
 
-        quillController.formatSelection(_isToggled(Attribute.italic)
+        _quillController.formatSelection(_isToggled(Attribute.italic)
             ? Attribute.clone(Attribute.italic, null)
             : Attribute.italic);
       },
@@ -136,7 +139,7 @@ class ToolbarController extends ChangeNotifier {
       action: () {
         _closeOrOpenExtraToolbar();
 
-        quillController.formatSelection(_isToggled(Attribute.strikeThrough)
+        _quillController.formatSelection(_isToggled(Attribute.strikeThrough)
             ? Attribute.clone(Attribute.strikeThrough, null)
             : Attribute.strikeThrough);
       },
@@ -147,7 +150,7 @@ class ToolbarController extends ChangeNotifier {
       action: () {
         _closeOrOpenExtraToolbar();
 
-        quillController.formatSelection(_isToggled(Attribute.underline)
+        _quillController.formatSelection(_isToggled(Attribute.underline)
             ? Attribute.clone(Attribute.underline, null)
             : Attribute.underline);
       },
@@ -159,7 +162,7 @@ class ToolbarController extends ChangeNotifier {
       action: () {
         _closeOrOpenExtraToolbar();
 
-        quillController.formatSelection(_isToggled(Attribute.ul)
+        _quillController.formatSelection(_isToggled(Attribute.ul)
             ? Attribute.clone(Attribute.ul, null)
             : Attribute.ul);
       },
@@ -170,7 +173,7 @@ class ToolbarController extends ChangeNotifier {
       action: () {
         _closeOrOpenExtraToolbar();
 
-        quillController.formatSelection(_isToggled(Attribute.ol)
+        _quillController.formatSelection(_isToggled(Attribute.ol)
             ? Attribute.clone(Attribute.ol, null)
             : Attribute.ol);
       },
@@ -187,8 +190,9 @@ class ToolbarController extends ChangeNotifier {
           Attribute.leftAlignment,
         ];
 
-        final currentAttr =
-            quillController.getSelectionStyle().attributes[Attribute.align.key];
+        final currentAttr = _quillController
+            .getSelectionStyle()
+            .attributes[Attribute.align.key];
 
         final applyAttrIndex =
             currentAttr != null ? alignAttrs.indexOf(currentAttr) + 1 : 0;
@@ -196,7 +200,7 @@ class ToolbarController extends ChangeNotifier {
         final applyAttr =
             alignAttrs.elementAtOrNull(applyAttrIndex) ?? alignAttrs.first;
 
-        quillController.formatSelection(
+        _quillController.formatSelection(
           Attribute.clone(Attribute.align, applyAttr.value),
         );
       },
@@ -209,13 +213,13 @@ class ToolbarController extends ChangeNotifier {
       action: () async {
         _closeOrOpenExtraToolbar();
 
-        final selection = quillController.selection;
-        final selectedText = quillController.getPlainText();
+        final selection = _quillController.selection;
+        final selectedText = _quillController.getPlainText();
         print(selectedText);
         final result = await _openLinkDialog(selectedText);
         if (result == null) return;
         String name = result['name'];
-        quillController
+        _quillController
           ..replaceText(selection.start, selectedText.length, name, null)
           ..updateSelection(
               TextSelection(
@@ -252,7 +256,7 @@ class ToolbarController extends ChangeNotifier {
               ),
             ),
             action: () {
-              quillController.formatSelection(isbg
+              _quillController.formatSelection(isbg
                   ? BackgroundAttribute(colorToHex(color))
                   : ColorAttribute(colorToHex(color)));
               _closeOrOpenExtraToolbar();
@@ -268,7 +272,7 @@ class ToolbarController extends ChangeNotifier {
             name: ToolbarButtons.fontSize,
             icon: Text('${index + 1}'),
             action: () {
-              quillController.formatSelection(
+              _quillController.formatSelection(
                 HeaderAttribute(level: index + 1),
               );
               _closeOrOpenExtraToolbar();
@@ -284,7 +288,7 @@ class ToolbarController extends ChangeNotifier {
           name: ToolbarButtons.fontFamily,
           icon: const Text('Roboto'),
           action: () {
-            quillController.formatSelection(FontAttribute('Roboto'));
+            _quillController.formatSelection(FontAttribute('Roboto'));
             _closeOrOpenExtraToolbar();
           },
         );
@@ -294,7 +298,7 @@ class ToolbarController extends ChangeNotifier {
 
   Future<Map?> _openLinkDialog(String? selectedText) async {
     final Map? result = await showDialog<Map>(
-      context: context,
+      context: _context,
       builder: (context) => LinkDialog(selectedText: selectedText),
     );
     return result;

@@ -1,26 +1,30 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, curly_braces_in_flow_control_structures
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:innotes/main.dart';
 import 'package:innotes/view/splash/splash.dart';
 
 class AuthenticationService {
+  AuthenticationService() {
+    _onCreate();
+  }
   final _fbAuth = FirebaseAuth.instance;
 
-  // void onCreate() {
-  //   _fbAuth.authStateChanges().listen((event) {
-  //     print('USER STATE EVENT: $event');
-  //   });
-  // }
+  void _onCreate() {
+    final x = _fbAuth.currentUser;
+    print('ON CREATE AUTH SERVICE, x=$x');
+  }
 
   /// if anonumous, return false
   bool get signedIn => !(_fbAuth.currentUser?.isAnonymous ?? true);
 
   User get user => _fbAuth.currentUser!;
 
-  String get userId => user.uid;
+  String get userId {
+    print('get user id , ${user}');
+    return user.uid;
+  }
 
   AuthenticationRespons _validatFields(String email, String pass,
       [String? fullName]) {
@@ -125,6 +129,8 @@ class AuthenticationService {
       ),
       (route) => true,
     );
+
+    ///TODO: sign in to anonymous user directly (call this func inside splas screen only)!
   }
 
   ///TODO: look for an utilisation for those two functions:

@@ -1,6 +1,5 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get_utils/get_utils.dart';
+import 'package:flutter/material.dart'; 
 import 'package:innotes/constants/animation.dart';
 import 'package:innotes/constants/spaces.dart';
 import 'package:innotes/constants/theme.dart';
@@ -83,7 +82,7 @@ class FolderGride extends StatelessWidget {
         mainAxisSpacing: 10,
         mainAxisExtent: 80,
       ),
-      itemBuilder: (context, index) => _Folder(),
+      itemBuilder: (context, index) => const _Folder(),
     );
   }
 }

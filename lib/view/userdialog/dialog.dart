@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innotes/constants/animation.dart';
 import 'package:innotes/services/auth.dart';
-import 'package:innotes/view/userdialog/widget/button.dart';
 import 'package:innotes/view/userdialog/widget/signed_in_tiles.dart';
 import 'package:innotes/view/userdialog/widget/signed_out_tile.dart';
 import 'package:innotes/view/userdialog/widget/theme_select.dart';
@@ -104,7 +103,6 @@ class UserDialog extends StatelessWidget {
                             endIndent: 8,
                             height: 15,
                           ),
-                        
                           ThemeModeSelector(),
                         ],
                       ),
