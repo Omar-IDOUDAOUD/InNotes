@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:innotes/model/user_profile.dart';
 import 'package:innotes/services/app_settings.dart';
 import 'package:innotes/services/auth.dart';
+import 'package:innotes/test.dart';
 import 'package:innotes/view/splash/splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

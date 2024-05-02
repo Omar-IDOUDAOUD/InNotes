@@ -97,7 +97,9 @@ class UserDialog extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          isUserSignedIn ? SignedInWidget() : SignedOutWidget(),
+                          isUserSignedIn
+                              ? SignedInWidget()
+                              : const SignedOutWidget(),
                           Divider(
                             indent: 40,
                             endIndent: 8,

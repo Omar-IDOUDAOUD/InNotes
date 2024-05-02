@@ -43,7 +43,7 @@ class Pagination<T> {
   void performQuery(Query<T> query) async {
     await query.get().then((snapshot) {
       checkSnapshotResponseHealthy(snapshot);
-      lastDocument = snapshot.docs.last;
+      lastDocument = snapshot.docs.lastOrNull ?? lastDocument;
       if (snapshot.size < defPaginationPayloadLimit) _canLoadMoreData = false;
       payload.addAll(snapshot.docs.map((e) => e.data()));
       print('QUERY GOTTED, $snapshot');

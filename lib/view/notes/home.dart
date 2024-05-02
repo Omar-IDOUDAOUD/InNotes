@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:innotes/providers/notes/notes.dart';
 import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/addnote/addnote.dart';
@@ -33,6 +36,10 @@ class _NotesPageState extends State<NotesPage>
 
   @override
   Widget build(BuildContext context) {
+    // print('----------');
+    // print(FirebaseAuth.instance.currentUser);
+    // print('----------');
+
     return ChangeNotifierProvider<NotesProvider>(
         create: (context) =>
             NotesProvider(userId: context.read<AuthenticationService>().userId),

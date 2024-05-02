@@ -5,6 +5,7 @@ import 'package:innotes/constants/spaces.dart';
 import 'package:innotes/services/auth.dart';
 import 'package:innotes/view/notes/home.dart';
 import 'package:innotes/view/shared/textfield_error_text.dart';
+import 'package:innotes/view/splash/splash.dart';
 import 'package:provider/provider.dart';
 
 class SignInTabView extends StatefulWidget {
@@ -53,8 +54,8 @@ class _SignInTabViewState extends State<SignInTabView> {
       await Future.delayed(Durations.extralong4);
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const NotesPage()),
-        (route) => true,
+        MaterialPageRoute(builder: (context) => const SplashPage()),
+        (route) => false,
       );
     }
   }

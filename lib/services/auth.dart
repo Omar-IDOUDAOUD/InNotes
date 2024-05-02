@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:innotes/main.dart';
+import 'package:innotes/providers/notes/notes.dart';
 import 'package:innotes/view/splash/splash.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class AuthenticationService {
 
   /// if anonumous, return false
   bool get signedIn => !(_fbAuth.currentUser?.isAnonymous ?? true);
+  bool get signedInAnonymously => _fbAuth.currentUser?.isAnonymous ?? false;
 
   User get user => _fbAuth.currentUser!;
 
@@ -24,10 +26,11 @@ class AuthenticationService {
     return user.uid;
   }
 
-  Future<void> signInAnonymouslyIfNeeded() async {
-    if (_fbAuth.currentUser == null) {
-      await _fbAuth.signInAnonymously();
-    }
+  // Future<void> enableSyncData() => FirebaseFirestore.instance.enableNetwork();
+  // Future<void> disableSyncData() => FirebaseFirestore.instance.disableNetwork();
+
+  Future<void> signInAnonymously() async {
+    await _fbAuth.signInAnonymously();
   }
 
   AuthenticationRespons _validatFields(String email, String pass,
@@ -124,11 +127,10 @@ class AuthenticationService {
         'Pretty';
   }
 
-  void signOut(BuildContext context) async {
-    if (user.isAnonymous) {
-      // final firestore = FirebaseFirestore.instance;
-      // final notesProvider = Provider.of<NotesProvider>(context, listen: false);
-      /// TODO: delete all notes for this user, from notesprovider
+  Future<void> signOut(BuildContext context) async {
+    if (signedInAnonymously) {
+      final notesProvider = context.read<NotesProvider>();
+      notesProvider.deleteAllNotes();
     }
     await _fbAuth.signOut();
   }

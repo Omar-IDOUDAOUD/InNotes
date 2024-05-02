@@ -37,4 +37,8 @@ class NotesProvider extends ChangeNotifier {
   void newDataAvailable() {
     notesByFlagPagination.reset();
   }
+
+  void deleteAllNotes() {
+    _firestore.collection('UsersNotes').doc(userId).delete();
+  }
 }
